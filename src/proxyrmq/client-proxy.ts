@@ -5,17 +5,17 @@ import { ConfigService } from '@nestjs/config'
 @Injectable()
 export class ClientProxySmartRanking {
 
-    constructor(private configService: ConfigService){}
+    constructor(private configService: ConfigService) { }
 
-    getClientProxyAdminBackendInstance(): ClientProxy {        
+    getClientProxyAdminBackendInstance(): ClientProxy {
 
-            return ClientProxyFactory.create({
+        return ClientProxyFactory.create({
             transport: Transport.RMQ,
             options: {
-            urls: [`amqp://${this.configService.get<string>('RABBITMQ_USER')}:${this.configService.get<string>('RABBITMQ_PASSWORD')}@${this.configService.get<string>('RABBITMQ_URL')}`],
+                urls: [`amqp://${this.configService.get<string>('RABBITMQ_USER')}:${this.configService.get<string>('RABBITMQ_PASSWORD')}@${this.configService.get<string>('RABBITMQ_URL')}`],
                 queue: 'admin-backend'
             }
-          })
+        })
     }
 
     getClientProxyDesafiosInstance(): ClientProxy {
@@ -23,10 +23,20 @@ export class ClientProxySmartRanking {
         return ClientProxyFactory.create({
             transport: Transport.RMQ,
             options: {
-            urls: [`amqp://${this.configService.get<string>('RABBITMQ_USER')}:${this.configService.get<string>('RABBITMQ_PASSWORD')}@${this.configService.get<string>('RABBITMQ_URL')}`],
+                urls: [`amqp://${this.configService.get<string>('RABBITMQ_USER')}:${this.configService.get<string>('RABBITMQ_PASSWORD')}@${this.configService.get<string>('RABBITMQ_URL')}`],
                 queue: 'desafios'
             }
-          })
+        })
     }
 
+    getClientProxyRankingsInstance(): ClientProxy {
+
+        return ClientProxyFactory.create({
+            transport: Transport.RMQ,
+            options: {
+                urls: [`amqp://${this.configService.get<string>('RABBITMQ_USER')}:${this.configService.get<string>('RABBITMQ_PASSWORD')}@${this.configService.get<string>('RABBITMQ_URL')}`],
+                queue: 'rankings'
+            }
+        })
+    }
 }
