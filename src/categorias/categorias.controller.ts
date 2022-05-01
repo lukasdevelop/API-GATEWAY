@@ -1,53 +1,35 @@
 import { Controller, Get, Logger, Post, UsePipes, ValidationPipe, Body, Query, Put, Param } from '@nestjs/common';
 import { CriarCategoriaDto } from './dtos/criar-categoria.dto';
 import { AtualizarCategoriaDto } from './dtos/atualizar-categoria.dto'
-import { Observable } from 'rxjs';
-import { ClientProxySmartRanking } from '../proxyrmq/client-proxy'
+import { CategoriasService } from './categorias.service';
 
 @Controller('api/v1/categorias')
 export class CategoriasController {
 
-  private logger = new Logger(CategoriasController.name)
-
   constructor(
-    private clientProxySmartRanking: ClientProxySmartRanking
-  ) {}
+    private categoriasService: CategoriasService
+  ) { }
 
-  /*
-  private clientAdminBackend: ClientProxy
-  constructor() {
-    this.clientAdminBackend = ClientProxyFactory.create({
-      transport: Transport.RMQ,
-      options: {
-        urls: ['amqp://user:q7W2UQk249gR@18.210.17.173:5672/smartranking'],
-        queue: 'admin-backend'
-      }
-    })
-  }
-  */
 
-  private clientAdminBackend = 
-              this.clientProxySmartRanking.getClientProxyAdminBackendInstance()
 
   @Post()
   @UsePipes(ValidationPipe)
   criarCategoria(
-    @Body() criarCategoriaDto: CriarCategoriaDto){
+    @Body() criarCategoriaDto: CriarCategoriaDto) {
 
-      this.clientAdminBackend.emit('criar-categoria', criarCategoriaDto)
+    this.categoriasService.criarCategoria(criarCategoriaDto)
   }
 
   @Get()
-  consultarCategorias(@Query('idCategoria') _id: string): Observable<any> {
-    return this.clientAdminBackend.send('consultar-categorias', _id ? _id : '')
+  async consultarCategorias(@Query('idCategoria') _id: string) {
+    return await this.categoriasService.consultarCategorias(_id)
   }
 
   @Put('/:_id')
-  @UsePipes(ValidationPipe)    
+  @UsePipes(ValidationPipe)
   atualizarCategoria(@Body() atualizarCategoriaDto: AtualizarCategoriaDto,
-         @Param('_id') _id: string) {
-          this.clientAdminBackend.emit('atualizar-categoria', 
-          { id: _id, categoria: atualizarCategoriaDto }) 
-         }    
+    @Param('_id') _id: string) {
+    this.categoriasService.atualizarCategoria(atualizarCategoriaDto, _id)
+  }
 
 }
