@@ -21,8 +21,8 @@ export class CategoriasController {
   }
 
   @Get()
-  async consultarCategorias(@Query('idCategoria') _id: string) {
-    return await this.categoriasService.consultarCategorias(_id)
+   consultarCategorias(@Query('idCategoria') _id: string) {
+    return this.categoriasService.consultarCategorias(_id)
   }
 
   @Put('/:_id')

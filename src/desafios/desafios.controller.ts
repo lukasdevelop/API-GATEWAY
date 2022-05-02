@@ -43,7 +43,7 @@ export class DesafiosController {
     async atribuirDesafioPartida(
         @Body(ValidationPipe) atribuirDesafioPartidaDto: AtribuirDesafioPartidaDto,
         @Param('desafio') _id: string) {
-        this.desafiosService.atribuirDesafioPartida(atribuirDesafioPartidaDto, _id)
+       await this.desafiosService.atribuirDesafioPartida(atribuirDesafioPartidaDto, _id)
 
     }
 
