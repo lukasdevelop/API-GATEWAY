@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { AwsService } from 'src/aws/aws.service';
+import { AwsS3Service } from 'src/aws/aws-s3.service';
 import { Categoria } from 'src/categorias/interfaces/categoria.interface';
 import { ClientProxySmartRanking } from 'src/proxyrmq/client-proxy';
 import { AtualizarJogadorDto } from './dtos/atualizar-jogador.dto';
@@ -10,7 +10,7 @@ import { Jogador } from './interfaces/jogador.interface';
 export class JogadoresService {
     private logger = new Logger(JogadoresService.name)
 
-    constructor(private clientProxySmartRanking: ClientProxySmartRanking, private awsService: AwsService){}
+    constructor(private clientProxySmartRanking: ClientProxySmartRanking, private awsS3Service: AwsS3Service){}
 
     private clientAdminBackend = this.clientProxySmartRanking.getClientProxyAdminBackendInstance()
 
@@ -37,7 +37,7 @@ export class JogadoresService {
             throw new BadRequestException(`Jogador não encontrado!`)
         }
 
-        const urlFotoJogador: { url: ''} = await this.awsService.uploadArquivo(file, _id)
+        const urlFotoJogador: { url: string} = await this.awsS3Service.uploadArquivo(file, _id)
 
         const atualizarJogadorDto: AtualizarJogadorDto = {}
 
